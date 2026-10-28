@@ -2,6 +2,7 @@ param(
   [Parameter(Mandatory)][string]$DistroTemplatePath,
   [Parameter(Mandatory)][string]$DistroInstallName,
   [string]$InstanceName,
+  [string]$InstallLocation,
   [switch]$InstallClaudeCode,
   [switch]$InstallGitConfig,
   [switch]$InstallVsCodeInterop,
@@ -133,8 +134,15 @@ $cloudInitDir = "$env:USERPROFILE\.cloud-init"
 New-Item -ItemType Directory -Force -Path $cloudInitDir | Out-Null
 Copy-Item -Force $userDataPath "$cloudInitDir\$InstanceName.user-data"
 
-Write-Host "[2/4] Installing $DistroInstallName as $InstanceName..."
-wsl --install $DistroInstallName --name $InstanceName --no-launch
+$installArguments = @('--install', $DistroInstallName, '--name', $InstanceName)
+if (-not [string]::IsNullOrWhiteSpace($InstallLocation)) {
+    $installArguments += @('--location', $InstallLocation)
+    Write-Host "[2/4] Installing $DistroInstallName as $InstanceName at $InstallLocation..."
+} else {
+    Write-Host "[2/4] Installing $DistroInstallName as $InstanceName at WSL's default location..."
+}
+$installArguments += '--no-launch'
+wsl @installArguments
 if ($LASTEXITCODE -ne 0) { Write-Error "WSL install failed"; exit 1 }
 
 Write-Host "[3/4] Waiting for cloud-init to finish..."

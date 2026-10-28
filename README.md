@@ -495,6 +495,8 @@ What you can set when provisioning, and how the instance is derived.
 - `-DistroInstallName` (required) — WSL distro passed to `wsl --install`. Only pinned Ubuntu LTS
   versions are supported: `Ubuntu-26.04`, `Ubuntu-24.04`, or `Ubuntu-22.04`.
 - `-InstanceName` (optional) — name for the new WSL instance. Defaults to `-DistroInstallName`.
+- `-InstallLocation` (optional) — directory where WSL stores the new instance. Defaults to WSL's
+  default location. For example, add `-InstallLocation 'D:\WSL\dev'` to install `dev` there.
 - `-InstallClaudeCode` (optional) — install Claude Code.
 - `-InstallGitConfig` (optional) — configure the Git identity, the credential helper, `gh` auth,
   and the Git shell helpers.
